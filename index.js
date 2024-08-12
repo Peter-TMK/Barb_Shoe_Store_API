@@ -1,11 +1,7 @@
-const express = require("express");
-const app = express();
+const app = require("./app");
+require("dotenv/config");
+const PORT = process.env.PORT || 3003;
 
-app.get("/shoe", (req, res) => {
-  console.log("shoe");
-  res.send("shoe");
-});
-
-app.listen(3003, () => {
+app.listen(PORT, () => {
   console.log(`Server running wella!`);
 });
