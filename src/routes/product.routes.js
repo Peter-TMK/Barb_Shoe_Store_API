@@ -12,14 +12,18 @@ const {
   addToCart,
   completePurchase,
   getOrderDetails,
+  searchProductByName,
 } = require("../controllers/product.controller");
 
 const authenticate = require("../middleware/auth.middleware");
 const roleMiddleware = require("../middleware/role.middleware");
 
+productRouter.get("/search", searchProductByName);
+
 // admin routes
 productRouter.post("/", authenticate, roleMiddleware("admin"), createProduct);
 productRouter.get("/", authenticate, roleMiddleware("admin"), getProducts);
+
 productRouter.get(
   "/:id",
   authenticate,
