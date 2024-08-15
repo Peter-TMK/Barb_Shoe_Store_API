@@ -151,47 +151,51 @@ const getProductByIdForClients = async (req, res) => {
 // const Product = require('../models/Product'); // Adjust path as necessary
 // const CartItem = require('../models/CartItem'); // Adjust path as necessary
 
-// const addToCart = async (req, res) => {
-//   try {
-//     const { productId, quantity } = req.body;
-//     const userId = req.user && req.user._id; // Assuming user ID is stored in req.user after authentication
+const addToCart = async (req, res) => {
+  try {
+    const { productId, quantity } = req.body;
+    const userId = req.user && req.user._id; // Assuming user ID is stored in req.user after authentication
+    // const productName = req.user.name;
 
-//     // Convert productId to ObjectId
-//     const productObjectId = new mongoose.Types.ObjectId(productId);
+    // Convert productId to ObjectId
+    const productObjectId = new mongoose.Types.ObjectId(productId);
 
-//     // Find the product
-//     const product = await productModel.findById(productObjectId);
-//     if (!product || product.isHidden) {
-//       return res.status(404).json({ message: "Product not found" });
-//     }
+    // Find the product
+    const product = await productModel.findById(productObjectId);
+    if (!product || product.isHidden) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-//     // Check if the cart item already exists
-//     let cartItem = await CartItem.findOne({
-//       userId,
-//       productId: productObjectId,
-//     });
+    // Check if the cart item already exists
+    let cartItem = await CartItem.findOne({
+      userId,
+      productId: productObjectId,
+      // productName,
+    });
 
-//     if (cartItem) {
-//       // Update the quantity if the item is already in the cart
-//       cartItem.quantity += quantity;
-//     } else {
-//       // Create a new cart item
-//       cartItem = new CartItem({
-//         userId,
-//         productId: productObjectId,
-//         quantity,
-//         price: product.price,
-//       });
-//     }
+    if (cartItem) {
+      // Update the quantity if the item is already in the cart
+      cartItem.quantity += quantity;
+    } else {
+      // Create a new cart item
+      cartItem = new CartItem({
+        userId,
+        productId: productObjectId,
+        quantity,
+        price: product.price,
+        // totalAmount: quantity * product.price,
+        // productName,
+      });
+    }
 
-//     // Save the cart item to the database
-//     await cartItem.save();
+    // Save the cart item to the database
+    await cartItem.save();
 
-//     res.status(200).json({ message: "Product added to cart", cartItem });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+    res.status(200).json({ message: "Product added to cart", cartItem });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // const addToCart = async (req, res) => {
 //   try {
@@ -234,77 +238,158 @@ const getProductByIdForClients = async (req, res) => {
 //     res.status(500).json({ message: error.message });
 //   }
 // };
-const addToCart = async (req, res) => {
-  try {
-    const { userId, productId, quantity } = req.body;
-    const product = await productModel.findById(productId);
+// const addToCart = async (req, res) => {
+//   try {
+//     const { userId, productId, quantity } = req.body;
+//     const product = await productModel.findById(productId);
 
-    if (!product) return res.status(404).json({ message: "Product not found" });
+//     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    const price = product.price * quantity;
+//     const price = product.price * quantity;
 
-    let cartItem = await CartItem.findOne({ userId, productId });
+//     let cartItem = await CartItem.findOne({ userId, productId });
 
-    if (cartItem) {
-      cartItem.quantity += quantity;
-      cartItem.price = cartItem.quantity * product.price;
-    } else {
-      cartItem = new CartItem({
-        userId: new mongoose.Types.ObjectId(userId),
-        productId: new mongoose.Types.ObjectId(productId),
-        quantity,
-        price,
-      });
-    }
+//     if (cartItem) {
+//       cartItem.quantity += quantity;
+//       cartItem.price = cartItem.quantity * product.price;
+//     } else {
+//       cartItem = new CartItem({
+//         userId: new mongoose.Types.ObjectId(userId),
+//         productId: new mongoose.Types.ObjectId(productId),
+//         quantity,
+//         price,
+//       });
+//     }
 
-    await cartItem.save();
-    res.status(201).json(cartItem);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+//     await cartItem.save();
+//     res.status(201).json(cartItem);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 const completePurchase = async (req, res) => {
   try {
-    const { cartItems } = req.body;
+    const userId = req.user._id; // Ensure user is authenticated
 
-    // Simulate processing the order
-    const order = {
-      items: cartItems,
-      totalAmount: cartItems.reduce(
-        (total, item) => total + item.quantity * item.price,
-        0
-      ),
-      status: "Pending",
-      createdAt: new Date(),
-    };
+    // Retrieve cart items for the user
+    const cartItems = await CartItem.find({ userId });
 
-    // Normally, save the order to the database here
+    if (cartItems.length === 0) {
+      return res.status(400).json({ message: "Your cart is empty" });
+    }
+
+    // Calculate total amount
+    const totalAmount = cartItems.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0
+    );
+
+    // Create order items
+    const orderItems = cartItems.map((item) => ({
+      productId: item.productId,
+      name: item.name, // Ensure this field is included in CartItem schema
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
+    // Create a new order
+    const order = new orderModel({
+      userId,
+      items: orderItems,
+      totalAmount,
+      status: "pending", // Default status
+    });
+
+    // Save the order to the database
+    await order.save();
+
+    // Clear the user's cart
+    await CartItem.deleteMany({ userId });
 
     res.status(201).json({ message: "Order placed successfully", order });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-const getOrderDetails = async (req, res) => {
-  try {
-    // Simulate retrieving order details
-    const order = {
-      id: req.params.id,
-      items: [
-        { productId: "12345", name: "Shoe Name", quantity: 2, price: 100 },
-      ],
-      totalAmount: 200,
-      status: "Pending",
-      createdAt: new Date(),
-    };
-
-    res.status(200).json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+// const completePurchase = async (req, res) => {
+//   try {
+//     const { cartItems } = req.body;
+
+//     // Simulate processing the order
+//     const order = {
+//       items: cartItems,
+//       totalAmount: cartItems.reduce(
+//         (total, item) => total + item.quantity * item.price,
+//         0
+//       ),
+//       status: "Pending",
+//       createdAt: new Date(),
+//     };
+
+//     // Normally, save the order to the database here
+
+//     res.status(201).json({ message: "Order placed successfully", order });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+
+const getOrderDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate that id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid order ID" });
+    }
+
+    // Retrieve the order details from the database
+    const order = await orderModel.findById(id).populate("items.productId"); // Adjust based on your schema
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Format the order details
+    const formattedOrder = {
+      id: order._id,
+      items: order.items.map((item) => ({
+        productId: item.productId._id,
+        name: item.productId.name, // Adjust based on your schema
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      totalAmount: order.totalAmount,
+      status: order.status,
+      createdAt: order.createdAt,
+    };
+
+    res.status(200).json(formattedOrder);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// const getOrderDetails = async (req, res) => {
+//   try {
+//     // Simulate retrieving order details
+//     const order = {
+//       id: req.params.id,
+//       items: [
+//         { productId: "12345", name: "Shoe Name", quantity: 2, price: 100 },
+//       ],
+//       totalAmount: 200,
+//       status: "pending",
+//       createdAt: new Date(),
+//     };
+
+//     res.status(200).json(order);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 module.exports = {
   createProduct,
