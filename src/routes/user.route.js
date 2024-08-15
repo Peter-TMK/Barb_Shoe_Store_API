@@ -25,7 +25,7 @@ userRouter.get("/", authenticate, roleMiddleware("admin"), getAllUsers);
 userRouter.get(
   "/:id",
   authenticate,
-  roleMiddleware("admin"),
+  // roleMiddleware("admin"),
   // validateObjectID,
   getSingleUser
 );
@@ -35,12 +35,17 @@ userRouter.get(
 userRouter.put(
   "/:id",
   authenticate,
-  roleMiddleware("admin"),
+  // roleMiddleware("admin"),
   // validateObjectID,
   // validateUserUpdateMiddleware,
   updateUser
 );
 
-userRouter.delete("/:id", authenticate, roleMiddleware("admin"), deleteUser);
+userRouter.delete(
+  "/:id",
+  authenticate,
+  // roleMiddleware("admin"),
+  deleteUser
+);
 
 module.exports = userRouter;
