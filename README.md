@@ -29,6 +29,22 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 - **View Products**: Browse available products, with details such as name, description, price, and variations.
 - **Mock Purchase**: Simulate the purchase process, adding products to the cart and checking out.
 
+### Validation(using express-validator)
+
+### Logging(using morgan)
+
+### Error Handling
+
+### Rate Limiting(using express-rate-limit)
+
+### Filter
+
+### Search
+
+### Sorting
+
+### Pagination
+
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js

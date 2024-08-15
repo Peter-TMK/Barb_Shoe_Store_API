@@ -401,6 +401,52 @@ const getOrderDetails = async (req, res, next) => {
 //   }
 // };
 
+const searchProductByName = async (req, res, next) => {
+  const { name, status, sortBy, order, page = 1, limit = 2 } = req.query;
+
+  let sortOptions = {};
+
+  if (sortBy) {
+    sortOptions[sortBy] = order === "desc" ? -1 : 1;
+  }
+
+  const skip = (page - 1) * limit;
+
+  try {
+    const filter = {};
+
+    if (name) {
+      filter.name = {
+        $regex: name,
+        $options: "i",
+      };
+    }
+
+    if (status) {
+      filter.status = {
+        // $regex: tags,
+        $in: status.split(","),
+      };
+    }
+    const totalProducts = await productModel.countDocuments(filter);
+
+    const tasks = await productModel
+      .find(filter)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(Number(limit));
+
+    res.status(200).json({
+      total: totalProducts,
+      page: Number(page),
+      pages: Math.ceil(totalProducts / limit),
+      tasks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createProduct,
   getProducts,
@@ -413,4 +459,5 @@ module.exports = {
   addToCart,
   completePurchase,
   getOrderDetails,
+  searchProductByName,
 };
