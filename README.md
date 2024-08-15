@@ -62,9 +62,9 @@ This project is an inventory management system for Barb Shoe Store, designed to 
    Create a .env file in the root directory with the following variables:
 
    ```
-   DATABASE_URL=your_database_url
-   JWT_SECRET=your_jwt_secret
-   PORT=your_port_number
+   PORT=3033
+   MONGO_URL=DATABASE_URL_LINK
+   JWT_SECRET_KEY=ANYTHINGDOTCOM
    ```
 
 ### Database Schema
