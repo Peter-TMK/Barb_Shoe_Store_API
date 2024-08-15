@@ -7,7 +7,7 @@ const orderModel = require("../models/order.model");
 const CartItem = require("../models/addToCart.model");
 // const notificationModel = require("../models/notification.model");
 
-const createProduct = async (req, res) => {
+const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, stockQuantity, variations } = req.body;
 
@@ -22,20 +22,22 @@ const createProduct = async (req, res) => {
     await product.save();
     res.status(201).json(product);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    // res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
-const getProducts = async (req, res) => {
+const getProducts = async (req, res, next) => {
   try {
     const products = await productModel.find();
     res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const getProductById = async (req, res) => {
+const getProductById = async (req, res, next) => {
   try {
     const product = await productModel.findById(req.params.id);
 
@@ -45,11 +47,12 @@ const getProductById = async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const editProduct = async (req, res) => {
+const editProduct = async (req, res, next) => {
   try {
     const product = await productModel.findById(req.params.id);
 
@@ -62,11 +65,12 @@ const editProduct = async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    // res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
-const hideProduct = async (req, res) => {
+const hideProduct = async (req, res, next) => {
   try {
     const product = await productModel.findById(req.params.id);
 
@@ -79,7 +83,8 @@ const hideProduct = async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    // res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -94,16 +99,17 @@ const hideProduct = async (req, res) => {
 // };
 ////////////// PENDING ABOVE ////////////////////////////////
 
-const getProductsForClients = async (req, res) => {
+const getProductsForClients = async (req, res, next) => {
   try {
     const products = await productModel.find({ isHidden: false });
     res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const getProductByIdForClients = async (req, res) => {
+const getProductByIdForClients = async (req, res, next) => {
   try {
     const product = await productModel.findById(req.params.id);
 
@@ -113,7 +119,8 @@ const getProductByIdForClients = async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -151,7 +158,7 @@ const getProductByIdForClients = async (req, res) => {
 // const Product = require('../models/Product'); // Adjust path as necessary
 // const CartItem = require('../models/CartItem'); // Adjust path as necessary
 
-const addToCart = async (req, res) => {
+const addToCart = async (req, res, next) => {
   try {
     const { productId, quantity } = req.body;
     const userId = req.user && req.user._id; // Assuming user ID is stored in req.user after authentication
@@ -193,7 +200,8 @@ const addToCart = async (req, res) => {
 
     res.status(200).json({ message: "Product added to cart", cartItem });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -268,7 +276,7 @@ const addToCart = async (req, res) => {
 //   }
 // };
 
-const completePurchase = async (req, res) => {
+const completePurchase = async (req, res, next) => {
   try {
     const userId = req.user._id; // Ensure user is authenticated
 
@@ -309,7 +317,8 @@ const completePurchase = async (req, res) => {
 
     res.status(201).json({ message: "Order placed successfully", order });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -336,7 +345,7 @@ const completePurchase = async (req, res) => {
 //   }
 // };
 
-const getOrderDetails = async (req, res) => {
+const getOrderDetails = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -368,7 +377,8 @@ const getOrderDetails = async (req, res) => {
 
     res.status(200).json(formattedOrder);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
