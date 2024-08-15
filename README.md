@@ -32,11 +32,11 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js
-- **Database**: PostgreSQL
-- **ORM**: Sequelize
+- **Database**: MongoDB
+- **ODM**: Mongoose
 - **Authentication**: JWT (JSON Web Tokens)
 - **Testing**: Jest, Supertest
-- **Deployment**: Heroku, AWS, or DigitalOcean
+- **Deployment**: Render
 
 ## Installation
 
@@ -54,6 +54,8 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 3. **Run the application:**
    ```
    npm start
+   OR
+   npm run dev
    ```
 4. **Environment Variables:**
 
