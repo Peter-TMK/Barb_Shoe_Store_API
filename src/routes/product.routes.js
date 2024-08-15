@@ -61,7 +61,7 @@ productRouter.post(
   completePurchase
 );
 productRouter.get(
-  "/:id",
+  "/order/:id",
   authenticate,
   roleMiddleware("client"),
   getOrderDetails
