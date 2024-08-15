@@ -11,7 +11,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/auth", authRouter);
-app.use("/api/product", productRouter);
-app.use("/api/product/notification", notificationRouter);
+app.use("/api/products", productRouter);
+app.use("/api/products/notification", notificationRouter);
 
 module.exports = app;

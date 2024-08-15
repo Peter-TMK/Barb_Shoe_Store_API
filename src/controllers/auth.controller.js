@@ -4,7 +4,7 @@ const userModel = require("../models/user.model");
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Check if the user already exists
     const existingUser = await userModel.findOne({ email });
@@ -20,7 +20,9 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role,
     });
+    console.log(user);
 
     await user.save();
 
@@ -54,6 +56,7 @@ const login = async (req, res) => {
         expiresIn: "1h",
       }
     );
+    console.log(user);
 
     res.status(200).json({ token });
   } catch (error) {
