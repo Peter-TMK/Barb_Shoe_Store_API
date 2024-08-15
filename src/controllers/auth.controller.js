@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user.model");
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -28,11 +28,12 @@ const register = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -56,11 +57,12 @@ const login = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    console.log(user);
+    // console.log(user);
 
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 

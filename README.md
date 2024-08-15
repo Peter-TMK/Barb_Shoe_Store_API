@@ -84,16 +84,17 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 - Edit a Product: PUT /api/products/:id
 - View All Products: GET /api/products
 - View a Specific Product: GET /api/products/:id
-- Hide a Product: POST /api/products/:id/hide
-- View Notifications: GET /api/notifications
+- Hide a Product: POST /api/products/hide/:id
+- View Notifications: GET /api/product/notification
+- View All Users: GET /api/users
 
 ##### Client Endpoints
 
 - View Products: GET /api/products
 - View a Specific Product: GET /api/products/:id
-- Add to Cart: POST /api/cart
-- Complete a Purchase: POST /api/orders
-- View Order Details: GET /api/orders/:id
+- Add to Cart: POST /api/products/cart/:id
+- Complete a Purchase: POST /api/products/orders/:id
+- View Order Details: GET /api/products/order/:id
 
 ### Testing
 

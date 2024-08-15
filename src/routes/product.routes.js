@@ -33,7 +33,12 @@ productRouter.put(
   roleMiddleware("admin"),
   editProduct
 );
-productRouter.post("/:id", authenticate, roleMiddleware("admin"), hideProduct);
+productRouter.post(
+  "/hide/:id",
+  authenticate,
+  roleMiddleware("admin"),
+  hideProduct
+);
 
 // client routes
 productRouter.get(
