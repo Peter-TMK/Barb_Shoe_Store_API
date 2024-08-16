@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  imageUrl: { type: String, default: "" }, // Optional field for product image
   variations: [
     {
       size: String,

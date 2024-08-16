@@ -1,68 +1,16 @@
 const joi = require("joi");
-const TaskModel = require("../models/task.model");
-const UserModel = require("../models/user.model");
-
-const uniqueTaskTitle = async (value, helper) => {
-  const existingTaskTitle = await TaskModel.findOne({ title: value });
-  if (existingTaskTitle) {
-    throw new Error("Each Task's Title Must Be Unique!");
-  }
-  return value;
-};
+const userModel = require("../models/user.model");
 
 const uniqueEmail = async (value, helper) => {
-  const existingTaskTitle = await UserModel.findOne({ email: value });
+  const existingTaskTitle = await userModel.findOne({ email: value });
   if (existingTaskTitle) {
     throw new Error("Each User's Email Must Be Unique!");
   }
   return value;
 };
 
-const validateTaskPost = joi.object({
-  title: joi.string().min(3).max(50).required().external(uniqueTaskTitle),
-  description: joi.string().min(5).max(1000),
-  status: joi.array().items(joi.string()).optional(),
-  //   dueDate,
-});
-const validateTaskUpdate = joi.object({
-  title: joi.string().min(3).max(50).required().external(uniqueTaskTitle),
-  description: joi.string().min(5).max(1000),
-  status: joi.array().items(joi.string()).optional(),
-  //   dueDate,
-});
-
-async function validateTaskPostMiddleWare(req, res, next) {
-  const payload = req.body;
-  try {
-    await validateTaskPost.validateAsync(payload, { abortEarly: false });
-    next();
-  } catch (error) {
-    // res.status(400).json({ error: error.details[0].message });
-    next({
-      // message: error.details[0].message,
-      message: error.message,
-      status: 400,
-    });
-  }
-}
-
-async function validateTaskUpdateMiddleWare(req, res, next) {
-  const payload = req.body;
-  try {
-    await validateTaskUpdate.validateAsync(payload, { abortEarly: false });
-    next();
-  } catch (error) {
-    // res.status(400).json({ error: error.details[0].message });
-    next({
-      // message: error.details[0].message,
-      message: error.message,
-      status: 400,
-    });
-  }
-}
-
 const validateRegister = joi.object({
-  // email: Joi.string().required().email(),
+  name: joi.string().required().min(5).max(50),
   email: joi
     .string()
     .required()
@@ -72,10 +20,11 @@ const validateRegister = joi.object({
     })
     .external(uniqueEmail),
   password: joi.string().required(),
+  role: joi.string(),
 });
 
 const validateUserUpdate = joi.object({
-  // email: Joi.string().required().email(),
+  name: joi.string().required().min(5).max(50),
   email: joi
     .string()
     .email({
@@ -84,6 +33,7 @@ const validateUserUpdate = joi.object({
     })
     .external(uniqueEmail),
   // password: joi.string().required(),
+  role: joi.string(),
 });
 
 async function validateRegisterMiddleWare(req, res, next) {
@@ -117,8 +67,33 @@ async function validateUserUpdateMiddleware(req, res, next) {
 }
 
 module.exports = {
-  validateTaskPostMiddleWare,
-  validateTaskUpdateMiddleWare,
   validateRegisterMiddleWare,
   validateUserUpdateMiddleware,
 };
+
+// const { body, validationResult } = require("express-validator");
+
+// // Validation rules
+// const validateRegisterUser = [
+//   body("name").notEmpty().withMessage("Name is required"),
+//   body("email").isEmail().withMessage("Invalid email format"),
+//   body("password")
+//     .isLength({ min: 6 })
+//     .withMessage("Password must be at least 6 characters long"),
+
+//   // Middleware to handle validation errors
+//   async (req, res, next) => {
+//     const errors = await validationResult(req);
+//     if (!errors.isEmpty()) {
+//       const error = new Error("Validation failed");
+//       error.status = 400;
+//       error.details = errors.array();
+//       return next(error);
+//     }
+//     next();
+//   },
+// ];
+
+// module.exports = {
+//   validateRegisterUser,
+// };

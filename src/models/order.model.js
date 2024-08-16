@@ -23,6 +23,7 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
+  imageUrl: { type: String, default: "" }, // Optional field for order-related image
   totalAmount: {
     type: Number,
     required: true,
