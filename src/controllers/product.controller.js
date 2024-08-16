@@ -432,7 +432,7 @@ const searchProductByName = async (req, res, next) => {
     }
     const totalProducts = await productModel.countDocuments(filter);
 
-    const tasks = await productModel
+    const products = await productModel
       .find(filter)
       .sort(sortOptions)
       .skip(skip)
@@ -442,7 +442,7 @@ const searchProductByName = async (req, res, next) => {
       total: totalProducts,
       page: Number(page),
       pages: Math.ceil(totalProducts / limit),
-      tasks,
+      products,
     });
   } catch (error) {
     next(error);
