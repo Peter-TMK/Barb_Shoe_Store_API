@@ -62,7 +62,7 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 
    ```
    git clone https://github.com/Peter-TMK/Barb_Shoe_Store_API.git
-   cd barb-shoe-store
+   cd Barb_Shoe_Store_API
    ```
 
 2. **Install dependencies:**
