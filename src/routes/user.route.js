@@ -17,6 +17,9 @@ const {
 
 const authenticate = require("../middleware/auth.middleware");
 const roleMiddleware = require("../middleware/role.middleware");
+const {
+  validateUserUpdateMiddleware,
+} = require("../middleware/validator.middleware");
 
 // userRouter.get("/search", searchTaskByTitle);
 
@@ -38,6 +41,7 @@ userRouter.put(
   // roleMiddleware("admin"),
   // validateObjectID,
   // validateUserUpdateMiddleware,
+  validateUserUpdateMiddleware,
   updateUser
 );
 

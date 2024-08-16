@@ -22,12 +22,17 @@ productRouter.get("/search", searchProductByName);
 
 // admin routes
 productRouter.post("/", authenticate, roleMiddleware("admin"), createProduct);
-productRouter.get("/", authenticate, roleMiddleware("admin"), getProducts);
+productRouter.get(
+  "/",
+  authenticate,
+  // roleMiddleware("admin"),
+  getProducts
+);
 
 productRouter.get(
   "/:id",
   authenticate,
-  roleMiddleware("admin"),
+  // roleMiddleware("admin"),
   getProductById
 );
 productRouter.put(
@@ -45,18 +50,20 @@ productRouter.post(
 );
 
 // client routes
-productRouter.get(
-  "/",
-  authenticate,
-  roleMiddleware("client"),
-  getProductsForClients
-);
-productRouter.get(
-  "/",
-  authenticate,
-  roleMiddleware("client"),
-  getProductByIdForClients
-);
+
+// productRouter.get(
+//   "/",
+//   authenticate,
+//   roleMiddleware("client"),
+//   getProductsForClients
+// );
+
+// productRouter.get(
+//   "/",
+//   authenticate,
+//   roleMiddleware("client"),
+//   getProductByIdForClients
+// );
 productRouter.post(
   "/cart/:id",
   authenticate,

@@ -9,7 +9,8 @@ const CartItem = require("../models/addToCart.model");
 
 const createProduct = async (req, res, next) => {
   try {
-    const { name, description, price, stockQuantity, variations } = req.body;
+    const { name, description, price, stockQuantity, variations, imageUrl } =
+      req.body;
 
     const product = new productModel({
       name,
@@ -17,6 +18,7 @@ const createProduct = async (req, res, next) => {
       price,
       stockQuantity,
       variations,
+      imageUrl,
     });
 
     await product.save();

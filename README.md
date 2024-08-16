@@ -2,6 +2,8 @@
 
 This project is an inventory management system for Barb Shoe Store, designed to manage products, sales, and deliveries. The system supports two types of users: **Admin** (store owner) and **Clients** (customers). The Admin can manage the inventory, while Clients can view and purchase products.
 
+## API DOCUMENTION LINK (w/Swagger) -
+
 ## Table of Contents
 
 - [Features](#features)
@@ -29,21 +31,21 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 - **View Products**: Browse available products, with details such as name, description, price, and variations.
 - **Mock Purchase**: Simulate the purchase process, adding products to the cart and checking out.
 
-### Validation(using express-validator)
+#### Validation (using express-validator OR joi)
 
-### Logging(using morgan)
+#### Logging (using morgan)
 
-### Error Handling
+#### Error Handling
 
-### Rate Limiting(using express-rate-limit)
+#### Rate Limiting (using express-rate-limit)
 
-### Filter
+#### Filter
 
-### Search
+#### Search
 
-### Sorting
+#### Sorting
 
-### Pagination
+#### Pagination
 
 ## Tech Stack
 
@@ -59,7 +61,7 @@ This project is an inventory management system for Barb Shoe Store, designed to 
 1. **Clone the repository:**
 
    ```
-   git clone https://github.com/yourusername/barb-shoe-store.git
+   git clone https://github.com/Peter-TMK/Barb_Shoe_Store_API.git
    cd barb-shoe-store
    ```
 
@@ -73,15 +75,16 @@ This project is an inventory management system for Barb Shoe Store, designed to 
    OR
    npm run dev
    ```
-4. **Environment Variables:**
 
-   Create a .env file in the root directory with the following variables:
+### Environment Variables
 
-   ```
-   PORT=3033
-   MONGO_URL=DATABASE_URL_LINK
-   JWT_SECRET_KEY=ANYTHINGDOTCOM
-   ```
+Create a .env file in the root directory with the following variables:
+
+```
+PORT=3033
+MONGO_URL=DATABASE_URL_LINK
+JWT_SECRET_KEY=ANYTHINGDOTCOM
+```
 
 ### Database Schema
 
